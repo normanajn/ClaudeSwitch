@@ -1,12 +1,18 @@
 # ClaudeSwitch
 
-A CLI/TUI/GUI tool for managing multiple [Claude Code](https://claude.ai/code) API configuration profiles. Quickly switch between different backends — standard Anthropic, Azure OpenAI, LiteLLM, or AskSage — without manually editing `~/.claude/settings.json`.
+If you are like me you have multiple sources of access to LLMs, and need to swap between them depending on what you are working on (i.e. a work account, private account, public free LLMs etc...) and you want them to all work with Claude Code.  Normally this would require copying files back and forth between the `.claude/settings.json` file, or setting a number of different environment variables.  This is a pain.
+
+This is where claudeswitch comes in.
+
+Claudeswitch, is a CLI/TUI/GUI tool for managing multiple [Claude Code](https://claude.ai/code) API configuration profiles. It lets you quickly switch between different backends — standard Anthropic account, Azure, OpenAI, LiteLLM, AskSage, etc... — without manually editing `~/.claude/settings.json`.
+
+It also lets you *see* what configuration you are currently in, so that you can tailor which claude terminals are doing what against different token pools.
 
 ## Features
 
-- **Interactive TUI** — keyboard-driven profile browser, no dependencies beyond Python 3
-- **Qt GUI** — split-panel interface with live JSON preview and import/export
-- **CLI mode** — scriptable profile switching
+- **CLI mode** — commandline for scripting profile switching
+- **Curses Terminal** — terminal-driven profile browser (slick as a mombo band)
+- **Qt GUI** — split-panel interface with live JSON preview and import/export (point, click)
 - **Auto-backup** — saves a timestamped copy of `settings.json` before every switch
 - **Secret masking** — API keys are hidden by default in all UIs
 
@@ -17,13 +23,38 @@ A CLI/TUI/GUI tool for managing multiple [Claude Code](https://claude.ai/code) A
 
 ## Installation
 
+To install claudeswitch you will need to do some basic boostrapping.  Either run the bootstrap script, or setup a Python virtual environment and populate it.
+
+First clone the repo:
 ```bash
 git clone https://github.com/youruser/ClaudeSwitch.git
 cd ClaudeSwitch
+```
+
+```
+./install.sh. # This does a basic install
+```
+
+`install.sh` makes the script executable, symlinks it to `/usr/local/bin/claudeswitch`, and runs `claudeswitch init` to create a default `login` profile.
+
+```
+python3 -m venv venv
+source ./venv/bin/activate
+pip install -r requirements.txt
+```
+At this point you should be able to test it out.
+```
+python -m claudeswitch init
+```
+
+If it works then you can do a:
+```
 ./install.sh
 ```
 
 `install.sh` makes the script executable, symlinks it to `/usr/local/bin/claudeswitch`, and runs `claudeswitch init` to create a default `login` profile.
+
+Notes: You'll want to create a set of settings-PROVIDER.json files which have the settings for each service you use.  If you also have an Anthropic Pro/Max account you should also make a settings-login.json which will be the settings when running in that mode.
 
 ## Usage
 
