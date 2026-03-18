@@ -1,0 +1,157 @@
+.TH CLAUDESWITCH 1 "2026-03-18" "ClaudeSwitch" "User Commands"
+.SH NAME
+claudeswitch \- manage Claude Code API configuration profiles
+.SH SYNOPSIS
+.B claudeswitch
+[\fIOPTION\fR]
+.SH DESCRIPTION
+.B claudeswitch
+manages multiple Claude Code settings profiles stored under
+.IR ~/.claude/ .
+Each profile is a
+.I settings\-<name>.json
+file containing backend-specific environment variables.
+Activating a profile copies it to
+.I ~/.claude/settings.json
+(the file Claude Code reads) and backs up the previous settings.
+.PP
+When invoked with no options,
+.B claudeswitch
+launches an interactive terminal UI (TUI) built with curses.
+A graphical Qt UI is available via
+.BR \-\-gui .
+.SH OPTIONS
+.TP
+.BR \-l ", " \-\-list
+Print the names of all available profiles, marking the active one.
+.TP
+.BR \-s " \fIname\fR, " \-\-switch " \fIname\fR"
+Switch to the named profile non-interactively.
+Backs up the current
+.I settings.json
+before switching.
+.TP
+.B \-\-gui
+Launch the graphical UI.
+Requires
+.B PySide6
+or
+.BR PyQt5 .
+Falls back to the TUI if neither is installed.
+.TP
+.B \-\-help
+Print a short usage summary and exit.
+.SH TUI KEY BINDINGS
+.SS Main menu
+.TP
+.BR "↑" " / " "↓"
+Navigate the profile list.
+.TP
+.B Enter
+Switch to the selected profile.
+.TP
+.B m
+Open the More menu.
+.TP
+.B q
+Quit.
+.SS More menu
+.TP
+.B c
+Configure the selected profile (edit API keys and URLs).
+.TP
+.B n
+Create a new profile.
+.TP
+.B d
+Delete the selected profile (confirmation required).
+.TP
+.B i
+Initialise default profiles (creates
+.I settings\-login.json
+if absent).
+.TP
+.B <
+Return to the main menu.
+.SH PROFILE TYPES
+Profile type is inferred from the profile name.
+.TP
+.B login
+Uses an Anthropic subscription; no API key is required.
+.TP
+.B azure
+Azure OpenAI backend.
+Fields: Azure API Key, Endpoint URL, API Version, Deployment Name.
+.TP
+.B litellm
+LiteLLM proxy backend.
+Fields: API Key, Proxy URL (default
+.IR http://localhost:4000 ).
+.TP
+.B asksage
+AskSage backend.
+Fields: API Key, Base URL, AskSage Token (optional).
+.TP
+.I anything else
+Standard Anthropic API.
+Fields: API Key, Base URL (default
+.IR https://api.anthropic.com ).
+.SH FILES
+.TP
+.I ~/.claude/settings.json
+Active profile; read by Claude Code on every invocation.
+.TP
+.I ~/.claude/.claudeswitch
+Plain-text file containing the name of the currently active profile.
+.TP
+.I ~/.claude/settings\-<name>.json
+Stored profile file for profile
+.IR name .
+.TP
+.I ~/.claude/backups/settings_YYYYMMDD_HHMMSS.json
+Timestamped backups created automatically before each profile switch.
+.SH INSTALLATION
+.nf
+git clone https://github.com/youruser/ClaudeSwitch.git
+cd ClaudeSwitch
+./install.sh
+.fi
+.PP
+.B install.sh
+makes the script executable, creates a symlink at
+.IR /usr/local/bin/claudeswitch ,
+and runs
+.B claudeswitch init
+to create a default
+.I login
+profile.
+.SH DEPENDENCIES
+Python\ 3.7 or later.
+.B PySide6
+or
+.B PyQt5
+is required only for
+.BR \-\-gui .
+No other third-party packages are needed.
+.SH EXAMPLES
+List all profiles:
+.PP
+.nf
+    claudeswitch \-\-list
+.fi
+.PP
+Switch to the azure profile:
+.PP
+.nf
+    claudeswitch \-\-switch azure
+.fi
+.PP
+Launch the interactive TUI:
+.PP
+.nf
+    claudeswitch
+.fi
+.SH SEE ALSO
+.BR claude (1)
+.SH LICENSE
+MIT
