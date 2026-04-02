@@ -8,6 +8,8 @@ Claudeswitch, is a CLI/TUI/GUI tool for managing multiple [Claude Code](https://
 
 It also lets you *see* what configuration you are currently in, so that you can tailor which claude terminals are doing what against different token pools.
 
+It doesn't expose your different auth tokens, it just handles the bookkeeping of juggling which one should be in place at any given time.
+
 ## Features
 
 - **CLI mode** — commandline for scripting profile switching
