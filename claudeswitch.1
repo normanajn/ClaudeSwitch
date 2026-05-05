@@ -4,6 +4,9 @@ claudeswitch \- manage Claude Code API configuration profiles
 .SH SYNOPSIS
 .B claudeswitch
 [\fIOPTION\fR]
+.br
+.B python3 -m claudeswitch
+[\fIOPTION\fR]
 .SH DESCRIPTION
 .B claudeswitch
 manages multiple Claude Code settings profiles stored under
@@ -20,7 +23,20 @@ When invoked with no options,
 launches an interactive terminal UI (TUI) built with curses.
 A graphical Qt UI is available via
 .BR \-\-gui .
+.PP
+The project is distributed as a standard Python package and can be invoked
+either through the installed
+.B claudeswitch
+console script or with
+.BR "python3 -m claudeswitch" .
 .SH OPTIONS
+.TP
+.B init
+Create
+.IR ~/.claude/ ,
+the backups directory, and a default
+.I settings\-login.json
+profile if they do not already exist.
 .TP
 .BR \-l ", " \-\-list
 Print the names of all available profiles, marking the active one.
@@ -41,6 +57,15 @@ Falls back to the TUI if neither is installed.
 .TP
 .B \-\-help
 Print a short usage summary and exit.
+.SH TESTING
+.nf
+python3 -m pip install -e '.[test]'
+pytest
+coverage run --source=claudeswitch -m pytest tests/test_cli.py -q
+coverage report -m
+.fi
+.PP
+The automated tests cover the non-interactive CLI and data-layer behavior.
 .SH TUI KEY BINDINGS
 .SS Main menu
 .TP
@@ -112,27 +137,28 @@ Stored profile file for profile
 Timestamped backups created automatically before each profile switch.
 .SH INSTALLATION
 .nf
-git clone https://github.com/youruser/ClaudeSwitch.git
+git clone https://github.com/normanajn/ClaudeSwitch.git
 cd ClaudeSwitch
-./install.sh
+python3 -m pip install .
+python3 -m claudeswitch init
 .fi
 .PP
 .B install.sh
-makes the script executable, creates a symlink at
-.IR /usr/local/bin/claudeswitch ,
-and runs
-.B claudeswitch init
+runs
+.B python3 -m pip install --user .[gui]
+and then
+.B python3 -m claudeswitch init
 to create a default
 .I login
 profile.
 .SH DEPENDENCIES
-Python\ 3.7 or later.
+Python\ 3.9 or later.
 .B PySide6
 or
 .B PyQt5
 is required only for
 .BR \-\-gui .
-No other third-party packages are needed.
+PyTest and Coverage are used for the automated test suite.
 .SH EXAMPLES
 List all profiles:
 .PP

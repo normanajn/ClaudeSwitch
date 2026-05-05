@@ -1,20 +1,18 @@
 #!/usr/bin/env bash
-# install.sh — install claudeswitch to /usr/local/bin
+# install.sh — install claudeswitch with pip
+#
+# Single-file alternative (no pip required):
+#   python3 build.py          # produces dist/claudeswitch.pyz
+#   ./dist/claudeswitch.pyz   # run directly
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TARGET="/usr/local/bin/claudeswitch"
+USER_BASE="$(python3 -m site --user-base)"
+USER_BIN="$USER_BASE/bin"
 
-chmod +x "$SCRIPT_DIR/claudeswitch"
+python3 -m pip install --user "$SCRIPT_DIR[gui]"
+python3 -m claudeswitch init
 
-if [[ -L "$TARGET" || -f "$TARGET" ]]; then
-  echo "Removing existing $TARGET"
-  sudo rm "$TARGET"
-fi
-
-sudo ln -s "$SCRIPT_DIR/claudeswitch" "$TARGET"
-echo "Installed: $TARGET -> $SCRIPT_DIR/claudeswitch"
-
-# Run init to set up profile files
-"$SCRIPT_DIR/claudeswitch" init
+echo "Installed ClaudeSwitch with python3 -m pip install --user .[gui]"
+echo "Console scripts are typically available in: $USER_BIN"
