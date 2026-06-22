@@ -25,7 +25,37 @@ It doesn't expose your different auth tokens, it just handles the bookkeeping of
 
 ## Installation
 
-To install claudeswitch you will need to do some basic boostrapping.  Either run the bootstrap script, or setup a Python virtual environment and populate it.
+### Install with pip (recommended)
+
+ClaudeSwitch is packaged as a standard Python wheel, so you can install it
+straight from a checkout (or a built wheel) into any environment:
+
+```bash
+pip install .              # core CLI/TUI (stdlib only)
+pip install ".[gui]"       # also pull in PySide6 for the --gui interface
+```
+
+This puts a `claudeswitch` command on your `PATH` and installs the man page.
+You can also run it as a module with `python -m claudeswitch`.
+
+To build distributable artifacts (a source tarball and a binary wheel):
+
+```bash
+pip install build
+python -m build            # outputs dist/claudeswitch-<ver>-py3-none-any.whl
+pip install dist/claudeswitch-*.whl
+```
+
+After installing, seed the default profile:
+
+```bash
+claudeswitch init
+```
+
+### Install from source (symlink)
+
+If you prefer to run directly from the repo, you can use the bootstrap script
+or set up a virtual environment manually.
 
 First clone the repo:
 ```bash

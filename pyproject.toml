@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "claudeswitch"
+version = "1.0.0"
+description = "CLI/TUI/GUI tool for managing multiple Claude Code API configuration profiles"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Andrew Norman" }]
+keywords = ["claude", "claude-code", "anthropic", "cli", "tui", "config", "profiles"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Environment :: Console :: Curses",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Utilities",
+]
+dependencies = []
+
+[project.optional-dependencies]
+# Qt graphical interface (claudeswitch --gui). PyQt5 also works at runtime.
+gui = ["PySide6"]
+
+[project.urls]
+Homepage = "https://github.com/normanajn/ClaudeSwitch"
+Repository = "https://github.com/normanajn/ClaudeSwitch"
+
+[project.scripts]
+claudeswitch = "claudeswitch.cli:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# Install the man page into the standard manpath of the environment/prefix.
+[tool.setuptools.data-files]
+"share/man/man1" = ["claudeswitch.1"]
