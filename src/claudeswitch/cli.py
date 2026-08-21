@@ -663,7 +663,7 @@ def run_gui():
             QFileDialog, QInputDialog,
         )
         from PySide6.QtCore import Qt
-        from PySide6.QtGui import QAction, QFont, QKeySequence, QColor
+        from PySide6.QtGui import QAction, QFont, QKeySequence, QColor, QIcon, QPixmap
     else:
         from PyQt5.QtWidgets import (
             QApplication, QMainWindow, QWidget, QSplitter,
@@ -673,7 +673,25 @@ def run_gui():
             QFileDialog, QInputDialog, QAction,
         )
         from PyQt5.QtCore import Qt
-        from PyQt5.QtGui import QFont, QKeySequence, QColor
+        from PyQt5.QtGui import QFont, QKeySequence, QColor, QIcon, QPixmap
+
+    icon_path = Path(__file__).resolve().parent / "cat-icon.png"
+    app_icon = None
+
+    # ── Helper: image label that always fits its own height ──────────────────
+
+    class HeightFitLabel(QLabel):
+        def __init__(self, pixmap):
+            super().__init__()
+            self._src = pixmap
+            self.setAlignment(Qt.AlignCenter)
+            self.setMinimumHeight(1)
+
+        def resizeEvent(self, event):
+            super().resizeEvent(event)
+            if not self._src.isNull() and self.height() > 0:
+                self.setPixmap(self._src.scaledToHeight(
+                    self.height(), Qt.SmoothTransformation))
 
     # ── Main window ───────────────────────────────────────────────────────────
 
@@ -681,6 +699,8 @@ def run_gui():
         def __init__(self):
             super().__init__()
             self.setWindowTitle("ClaudeSwitch")
+            if app_icon is not None:
+                self.setWindowIcon(app_icon)
             self.resize(1000, 650)
             self._selected = None     # currently selected profile name
             self._form_fields  = []   # list of field specs
@@ -763,7 +783,17 @@ def run_gui():
             btn_row.addWidget(self.btn_save)
             form_outer.addLayout(btn_row)
 
-            right_split.addWidget(form_box)
+            form_row = QWidget()
+            form_row_layout = QHBoxLayout(form_row)
+            form_row_layout.setContentsMargins(0, 0, 0, 0)
+            form_row_layout.addWidget(form_box, 1)
+
+            cat_path = Path(__file__).resolve().parent / "cat.png"
+            if cat_path.exists():
+                cat_label = HeightFitLabel(QPixmap(str(cat_path)))
+                form_row_layout.addWidget(cat_label, 1)
+
+            right_split.addWidget(form_row)
             right_split.setSizes([220, 400])
 
             main_split.addWidget(right_split)
@@ -1124,6 +1154,9 @@ def run_gui():
     # ── Launch ────────────────────────────────────────────────────────────────
     app = QApplication(sys.argv)
     app.setApplicationName("ClaudeSwitch")
+    if icon_path.exists():
+        app_icon = QIcon(str(icon_path))
+        app.setWindowIcon(app_icon)
     win = ClaudeSwitchWindow()
     win.show()
     sys.exit(app.exec() if binding == "pyside6" else app.exec_())

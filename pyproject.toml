@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "claudeswitch"
-version = "1.0.0"
+version = "0.1.0"
 description = "CLI/TUI/GUI tool for managing multiple Claude Code API configuration profiles"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -45,6 +45,9 @@ package-dir = { "" = "src" }
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+claudeswitch = ["cat-icon.png", "cat.png"]
 
 # Install the man page into the standard manpath of the environment/prefix.
 [tool.setuptools.data-files]
